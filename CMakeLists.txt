@@ -3,6 +3,8 @@ project(main)
 
 set(CMAKE_CXX_STANDARD 11)
 
+file(GLOB shaders "${PROJECT_SOURCE_DIR}/shaders/*")
+
 set(SOURCE_FILES
     common.h
     glad.c
@@ -33,11 +35,10 @@ include_directories(${ADDITIONAL_INCLUDE_DIRS})
 
 find_package(OpenGL REQUIRED)
 
-add_executable(main ${SOURCE_FILES})
+add_executable(main ${SOURCE_FILES} ${shaders})
 
 target_include_directories(main PRIVATE ${OPENGL_INCLUDE_DIR})
 
-file(GLOB shaders "${PROJECT_SOURCE_DIR}/shaders/*")
 foreach(shader ${shaders})
     get_filename_component(outputFileName ${shader} NAME)
     configure_file(${shader} ${PROJECT_BINARY_DIR}/${outputFileName} COPYONLY)
@@ -48,11 +49,11 @@ if(WIN32)
   #set(CMAKE_MSVCIDE_RUN_PATH ${ADDITIONAL_RUNTIME_LIBRARY_DIRS})
   target_compile_options(main PRIVATE)
   target_link_libraries(main LINK_PUBLIC ${OPENGL_gl_LIBRARY} glfw3dll)
-elseif(UNIX)
-  target_compile_options(main PRIVATE -Wnarrowing)
-  target_link_libraries(main LINK_PUBLIC ${OPENGL_gl_LIBRARY} glfw rt dl)
-else()
+elseif(APPLE)
   target_compile_options(main PRIVATE -Wnarrowing)
   target_link_libraries(main LINK_PUBLIC ${OPENGL_gl_LIBRARY} glfw dl)
+else()
+  target_compile_options(main PRIVATE -Wnarrowing)
+  target_link_libraries(main LINK_PUBLIC ${OPENGL_gl_LIBRARY} glfw rt dl)
 endif()
 

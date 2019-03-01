@@ -6,8 +6,7 @@
 
 #include "LiteMath.h"
 
-class ShaderProgram
-{
+class ShaderProgram {
 public:
 
     ShaderProgram() : shaderProgram(-1) {}
